@@ -1,0 +1,20 @@
+﻿@model NewsListModel
+@{
+    ViewData["Title"] = "News";
+}
+
+
+
+    <div class="card-columns">
+        @foreach (NewsModel m in Model.NewsList)
+        {
+        <a href=@m.url >
+            <div class="card">
+                <img class="card-img-top" src=@m.image alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@m.headline</h5>
+                </div>
+            </div>
+        </a>
+        }
+    </div>
