@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VAII.Models;
 
 namespace VAII.Data
 {
@@ -12,5 +13,7 @@ namespace VAII.Data
             : base(options)
         {
         }
+
+        public DbSet<FoundModel> Founds { get; set; }
     }
 }

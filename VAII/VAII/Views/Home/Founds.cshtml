@@ -1,0 +1,97 @@
+﻿@model FoundsData
+@{
+    ViewData["Title"] = "Found";
+}
+
+
+<input class="form-control" type="text" placeholder="Search" aria-label="Search">
+<div class="fixed-table-pagination" style="">
+    <div class="float-left pagination-detail">
+        <span class="pagination-info">
+            Showing @((Model.Page - 1) * Model.Count + 1) to @((Model.Page) * Model.Count) of @Model.MaxCount rows
+        </span><span class="page-list">
+            <span class="btn-group dropdown dropup">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                    <span class="page-size">
+                        @Model.Count
+                    </span>
+                    <span class="caret"></span>
+                </button>
+                <div class="dropdown-menu"><a class="dropdown-item active" href="?count=10">10</a><a class="dropdown-item " href="?count=25">25</a><a class="dropdown-item " href="?count=50">50</a><a class="dropdown-item " href="?count=100">100</a><a class="dropdown-item " href="?count=-1">All</a></div>
+            </span> rows per page
+        </span>
+    </div>
+    <div class="float-right pagination">
+        <ul class="pagination">
+
+            @if (1 != Model.Page)
+            {
+
+                <li class="page-item page-pre"><a class="page-link" aria-label="previous page" href="?page=@(Model.Page - 1)&count=@Model.Count">‹</a></li>
+            }
+
+
+            @if (2 < Model.Page)
+            {
+                <li class="page-item"><a class="page-link" aria-label="to page 1" href="?page=1&count=@Model.Count">1</a></li>
+            }
+            @if (3 < Model.Page)
+            {
+                <li class="page-item page-first-separator disabled"><a class="page-link" href="#">...</a></li>
+            }
+
+            @if (1 != Model.Page)
+            {
+
+                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page - 1)" href="?page=@(Model.Page - 1)&count=@Model.Count">@(Model.Page - 1)</a></li>
+            }
+            <li class="page-item active"><a class="page-link" aria-label="to page @Model.Page" href="?page=@Model.Page&count=@Model.Count">@Model.Page</a></li>
+            @if (Model.MaxPage != Model.Page)
+            {
+                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count">@(Model.Page + 1)</a></li>
+            }
+
+            @if (Model.MaxPage > Model.Page + 1)
+            {
+                <li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>
+            }
+            @if (Model.MaxPage > Model.Page + 2)
+            {
+                <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count">@Model.MaxPage</a></li>
+            }
+
+            @if (Model.MaxPage != Model.Page)
+            {
+                <li class="page-item page-next"><a class="page-link" aria-label="next page" href="?page=@(Model.Page + 1)&count=@Model.Count">›</a></li>
+            }
+
+        </ul>
+    </div>
+</div>
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (FoundModel f in Model.List)
+        {
+            <tr>
+                <td>
+                    <a href="Found?s=@f.symbol" }>
+                        @f.symbol
+                    </a>
+                </td>
+
+                <td>
+                    @f.description
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>

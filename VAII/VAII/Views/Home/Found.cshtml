@@ -1,0 +1,51 @@
+﻿@model FoundDetailModel
+@{
+    ViewData["Title"] = "Found";
+}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<canvas id="myChart" width="200" height="200"></canvas>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    var data = JSON.parse('@Json.Serialize(@Model)');
+
+    var stackedLine = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.t.map(a => new Date(a).toString('yyyy-MM-d')),
+            datasets: [{
+                    data: data.o,
+                    label: "open prices",
+                    borderColor: "#3e95cd",
+                    fill: false
+                },
+                {
+                    data: data.h,
+                    label: "high prices",
+                    borderColor: "#8e5ea2",
+                    fill: false
+                },
+                {
+                    data: data.l,
+                    label: "low prices",
+                    borderColor: "#3cba9f",
+                    fill: false
+                },
+                {
+                    data: data.c,
+                    label: "close prices",
+                    borderColor: "#e8c3b9",
+                    fill: false
+                },
+                {
+                    data: data.v,
+                    label: "volume prices",
+                    borderColor: "#c45850",
+                    fill: false
+                },
+            ]
+        }
+    });
+
+</script>
