@@ -20,5 +20,6 @@ namespace VAII.Models
         public int Count { get; set; }
         public int MaxCount { get; set; }
         public int MaxPage { get; set; }
+        public string Search { get; set; }
     }
 }

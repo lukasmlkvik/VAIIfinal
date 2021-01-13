@@ -8,17 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using VAII.Data;
 using VAII.Models;
 
 namespace VAII.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db)
         {
-            _logger = logger;
+            _db = db;
         }
 
         public IActionResult Index()
@@ -44,27 +45,35 @@ namespace VAII.Controllers
         }
 
 
-        public IActionResult Founds(int page = 1, int count = 10)
+        public IActionResult Founds(int page = 1, int count = 10, string search = "")
         {
-            var uri = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=bu6lbcn48v6pfj0ol470";
+            /*var uri = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=bu6lbcn48v6pfj0ol470";
             var client = new System.Net.WebClient();
-            var data = client.DownloadString(uri);
-            List<FoundModel> list = null;
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<FoundModel>));
+            var data = client.DownloadString(uri);*/
+            List<FoundModel> list = search == null ? _db.Founds.ToList() : _db.Founds.Where(f => f.symbol.Contains(search) || f.description.Contains(search)).ToList();
+           /* DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<FoundModel>));
             using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
             {
-                list = (List<FoundModel>)serializer.ReadObject(m);
-            }
+                list = ((List<FoundModel>)serializer.ReadObject(m)).OrderBy(a => a.symbol).ToList();
+            }*/
             if (count == -1)
             {
                 count = list.Count;
             }
             FoundsData dataF = new FoundsData();
-            dataF.List = list.OrderBy(a => a.symbol).Take((page) * count).TakeLast(count).ToList();
+
+           /* foreach (var d in list)
+            {
+                _db.Founds.Add(d);
+            }
+            _db.SaveChanges();*/
+
+            dataF.List = list.Take((page) * count).TakeLast(count).ToList();
             dataF.Count = count;
             dataF.Page = page;
+            dataF.Search = search;
             dataF.MaxCount = list.Count;
-            dataF.MaxPage = list.Count % count == 0 ? list.Count / count : list.Count % count + 1;
+            dataF.MaxPage = list.Count % count == 0 ? list.Count / count : list.Count / count + 1;
             return View(dataF);
         }
 

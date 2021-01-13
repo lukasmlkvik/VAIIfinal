@@ -4,7 +4,15 @@
 }
 
 
-<input class="form-control" type="text" placeholder="Search" aria-label="Search">
+<input class="form-control" type="text" id="search" placeholder="Search" aria-label="Search" value="@Model.Search">
+
+<script>
+    var search = document.getElementById("search");
+    search.onchange = (e) => {
+        document.location.search = "?page=1&count=@Model.Count&search=" + e.target.value;
+    }
+</script>
+
 <div class="fixed-table-pagination" style="">
     <div class="float-left pagination-detail">
         <span class="pagination-info">
@@ -17,7 +25,7 @@
                     </span>
                     <span class="caret"></span>
                 </button>
-                <div class="dropdown-menu"><a class="dropdown-item active" href="?count=10">10</a><a class="dropdown-item " href="?count=25">25</a><a class="dropdown-item " href="?count=50">50</a><a class="dropdown-item " href="?count=100">100</a><a class="dropdown-item " href="?count=-1">All</a></div>
+                <div class="dropdown-menu"><a class="dropdown-item active" href="?count=10&search=@Model.Search">10</a><a class="dropdown-item " href="?count=25&search=@Model.Search">25</a><a class="dropdown-item " href="?count=50&search=@Model.Search">50</a><a class="dropdown-item " href="?count=100&search=@Model.Search">100</a><a class="dropdown-item " href="?count=-1&search=@Model.Search">All</a></div>
             </span> rows per page
         </span>
     </div>
@@ -27,13 +35,13 @@
             @if (1 != Model.Page)
             {
 
-                <li class="page-item page-pre"><a class="page-link" aria-label="previous page" href="?page=@(Model.Page - 1)&count=@Model.Count">‹</a></li>
+                <li class="page-item page-pre"><a class="page-link" aria-label="previous page" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">‹</a></li>
             }
 
 
             @if (2 < Model.Page)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page 1" href="?page=1&count=@Model.Count">1</a></li>
+                <li class="page-item"><a class="page-link" aria-label="to page 1" href="?page=1&count=@Model.Count&search=@Model.Search">1</a></li>
             }
             @if (3 < Model.Page)
             {
@@ -43,12 +51,12 @@
             @if (1 != Model.Page)
             {
 
-                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page - 1)" href="?page=@(Model.Page - 1)&count=@Model.Count">@(Model.Page - 1)</a></li>
+                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page - 1)" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">@(Model.Page - 1)</a></li>
             }
-            <li class="page-item active"><a class="page-link" aria-label="to page @Model.Page" href="?page=@Model.Page&count=@Model.Count">@Model.Page</a></li>
+            <li class="page-item active"><a class="page-link" aria-label="to page @Model.Page" href="?page=@Model.Page&count=@Model.Count&search=@Model.Search">@Model.Page</a></li>
             @if (Model.MaxPage != Model.Page)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count">@(Model.Page + 1)</a></li>
+                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">@(Model.Page + 1)</a></li>
             }
 
             @if (Model.MaxPage > Model.Page + 1)
@@ -57,12 +65,12 @@
             }
             @if (Model.MaxPage > Model.Page + 2)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count">@Model.MaxPage</a></li>
+                <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count&search=@Model.Search">@Model.MaxPage</a></li>
             }
 
             @if (Model.MaxPage != Model.Page)
             {
-                <li class="page-item page-next"><a class="page-link" aria-label="next page" href="?page=@(Model.Page + 1)&count=@Model.Count">›</a></li>
+                <li class="page-item page-next"><a class="page-link" aria-label="next page" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">›</a></li>
             }
 
         </ul>
