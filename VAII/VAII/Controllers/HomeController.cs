@@ -30,17 +30,29 @@ namespace VAII.Controllers
         [HttpGet]
         public IActionResult News()
         {
-
-            var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2020-04-30&to=2020-05-01&token=bu6lbcn48v6pfj0ol470";
-            var client = new System.Net.WebClient();
-            var data = client.DownloadString(uri);
             NewsListModel newsList = new NewsListModel();
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
-            using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+            ServerInfoModel sm = _db.ServerInfo.Where(s => s.id == 1).Take(1).ToList()[0];
+            if (DateTime.Now - sm.date >= TimeSpan.FromHours(24))
             {
-                newsList.NewsList = (List<NewsModel>)serializer.ReadObject(m);
-            }
+                var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2020-04-30&to=2020-05-01&token=bu6lbcn48v6pfj0ol470";
+                var client = new System.Net.WebClient();
+                var data = client.DownloadString(uri);
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
+                using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+                {
+                    newsList.NewsList = (List<NewsModel>)serializer.ReadObject(m);
+                    _db.News.RemoveRange(_db.News);
+                    _db.News.AddRange(newsList.NewsList);
 
+                    sm.date = DateTime.Now;
+                    _db.ServerInfo.Update(sm);
+
+                    _db.SaveChanges();
+                }
+            }
+            else {
+                newsList.NewsList = _db.News.ToList();
+            }
             return View(newsList);
         }
 

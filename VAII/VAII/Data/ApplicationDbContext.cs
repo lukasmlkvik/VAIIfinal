@@ -15,5 +15,7 @@ namespace VAII.Data
         }
 
         public DbSet<FoundModel> Founds { get; set; }
+        public DbSet<NewsModel> News { get; set; }
+        public DbSet<ServerInfoModel> ServerInfo { get; set; }
     }
 }
