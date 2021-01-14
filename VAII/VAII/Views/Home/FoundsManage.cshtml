@@ -1,0 +1,31 @@
+﻿@model List<FoundModel>
+@{
+    ViewData["Title"] = "Profile";
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+
+    <div class="card-columns">
+        @foreach (FoundModel f in Model)
+        {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@f.description</h5>
+                <a href="Found?s=@f.symbol" }>
+                    @f.symbol
+                </a>
+            </div>
+        </div>
+        }
+    </div>
+
+}
+else
+{
+    <h1>You are not Signed in</h1>
+}

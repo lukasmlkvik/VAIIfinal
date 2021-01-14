@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Profile";
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage your account</a>
+    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FoundsManage">Founds Manage</a>
+
+}
+else
+{
+    <h1>You are not Signed in</h1>
+}

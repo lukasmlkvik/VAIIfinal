@@ -22,6 +22,21 @@ namespace VAII.Controllers
             _db = db;
         }
 
+
+
+        public IActionResult FoundsManage()
+        {
+            var list1 = _db.UsersFounds.Where(u => u.Email.Equals(User.Identity.Name));
+            List<FoundModel> list = list1.Join(_db.Founds,
+                uf => uf.symbol, f => f.symbol,(uf,f) => f).ToList();
+            return View(list);
+        }
+
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
