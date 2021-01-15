@@ -7,8 +7,8 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage your account</a>
-    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FoundsManage">Founds Manage</a>
+    <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage your account</a>
+    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="FoundsManage">Founds Manage</a>
 
 }
 else

@@ -49,21 +49,30 @@ namespace VAII.Controllers
             ServerInfoModel sm = _db.ServerInfo.Where(s => s.id == 1).Take(1).ToList()[0];
             if (DateTime.Now - sm.date >= TimeSpan.FromHours(24))
             {
-                var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2020-04-30&to=2020-05-01&token=bu6lbcn48v6pfj0ol470";
-                var client = new System.Net.WebClient();
-                var data = client.DownloadString(uri);
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
-                using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+
+                try
                 {
-                    newsList.NewsList = (List<NewsModel>)serializer.ReadObject(m);
-                    _db.News.RemoveRange(_db.News);
-                    _db.News.AddRange(newsList.NewsList);
+                    var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2020-04-30&to=2020-05-01&token=bu6lbcn48v6pfj0ol470";
+                    var client = new System.Net.WebClient();
+                    var data = client.DownloadString(uri);
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
+                    using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+                    {
+                        newsList.NewsList = (List<NewsModel>)serializer.ReadObject(m);
+                        _db.News.RemoveRange(_db.News);
+                        _db.News.AddRange(newsList.NewsList);
 
-                    sm.date = DateTime.Now;
-                    _db.ServerInfo.Update(sm);
+                        sm.date = DateTime.Now;
+                        _db.ServerInfo.Update(sm);
 
-                    _db.SaveChanges();
+                        _db.SaveChanges();
+                    }
                 }
+                catch (System.Net.WebException e)
+                {
+
+                }
+                
             }
             else {
                 newsList.NewsList = _db.News.ToList();
@@ -107,22 +116,22 @@ namespace VAII.Controllers
         public IActionResult Found(string s)
         {
 
-            var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=D&from=1572651390&to=1575243390&token=bu6lbcn48v6pfj0ol470";
-            var client = new System.Net.WebClient();
-            var data = client.DownloadString(uri);
             FoundDetailModel found = null;
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FoundDetailModel));
-            using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+            try
             {
-                found = (FoundDetailModel)serializer.ReadObject(m);
+                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=D&from=1572651390&to=1575243390&token=bu6lbcn48v6pfj0ol470";
+                var client = new System.Net.WebClient();
+                var data = client.DownloadString(uri);
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FoundDetailModel));
+                using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
+                {
+                    found = (FoundDetailModel)serializer.ReadObject(m);
+                }
             }
-
-           /* List<AxisModel> list = new List<AxisModel>();
-            for (int i = 0; i < found.t.Count; i++)
+            catch (System.Net.WebException e)
             {
-                list.Add(new AxisModel(found.t[i], found.o[i]));
-            }*/
-
+                found = new FoundDetailModel();
+            }
 
             return View(found);
         }
