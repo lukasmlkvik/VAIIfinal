@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,10 @@ namespace VAII.Controllers
 
         public IActionResult FoundsManage()
         {
-            var list1 = _db.UsersFounds.Where(u => u.Email.Equals(User.Identity.Name));
+            if (!User.Identity.IsAuthenticated) return View(new List<FoundModel>());
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var list1 = _db.UsersFounds.Where(
+                u => u.Id.Equals(userId));
             List<FoundModel> list = list1.Join(_db.Founds,
                 uf => uf.symbol, f => f.symbol,(uf,f) => f).ToList();
             return View(list);
@@ -34,6 +38,7 @@ namespace VAII.Controllers
 
         public IActionResult Profile()
         {
+
             return View();
         }
 
@@ -46,13 +51,13 @@ namespace VAII.Controllers
         public IActionResult News()
         {
             NewsListModel newsList = new NewsListModel();
-            ServerInfoModel sm = _db.ServerInfo.Where(s => s.id == 1).Take(1).ToList()[0];
+            ServerInfoModel sm = _db.ServerInfo.Where(s => s.id == 1).Single();
             if (DateTime.Now - sm.date >= TimeSpan.FromHours(24))
             {
 
                 try
                 {
-                    var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from=2020-04-30&to=2020-05-01&token=bu6lbcn48v6pfj0ol470";
+                    var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from="+ (DateTime.Now - TimeSpan.FromDays(5)).ToString("yyyy-MM-dd")+"&to=" + DateTime.Now.ToString("yyyy-MM-d") + "&token=" + Constants.API_TOKEN;
                     var client = new System.Net.WebClient();
                     var data = client.DownloadString(uri);
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
@@ -68,7 +73,7 @@ namespace VAII.Controllers
                         _db.SaveChanges();
                     }
                 }
-                catch (System.Net.WebException e)
+                catch (System.Net.WebException)
                 {
 
                 }
@@ -83,16 +88,17 @@ namespace VAII.Controllers
 
         public IActionResult Founds(int page = 1, int count = 10, string search = "")
         {
-            /*var uri = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=bu6lbcn48v6pfj0ol470";
+            /*var uri = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=" + Constants.API_TOKEN;
             var client = new System.Net.WebClient();
             var data = client.DownloadString(uri);*/
-            List<FoundModel> list = search == null ? _db.Founds.ToList() : _db.Founds.Where(f => f.symbol.Contains(search) || f.description.Contains(search)).ToList();
+            List<FoundModel> list = search == null ? _db.Founds.ToList() :  _db.Founds.Where(
+                    f => f.symbol.Contains(search) || (f.description != null && f.description.Contains(search)) || (f.name != null && f.name.Contains(search))).ToList();
            /* DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<FoundModel>));
             using (var m = new MemoryStream(Encoding.Unicode.GetBytes(data)))
             {
                 list = ((List<FoundModel>)serializer.ReadObject(m)).OrderBy(a => a.symbol).ToList();
             }*/
-            if (count == -1)
+            if (count <= 0)
             {
                 count = list.Count;
             }
@@ -113,13 +119,17 @@ namespace VAII.Controllers
             return View(dataF);
         }
 
-        public IActionResult Found(string s)
+        public IActionResult Found(string s, long from = 1609865052, long to = 1610728767, int resolution = 1)
         {
+
+            string[] resolutions = { "1", "5", "15", "30", "60", "D", "W", "M" };
+
+            int r = resolution < 0 ? 0 : (resolution >= resolutions.Length ? 0 : resolution);
 
             FoundDetailModel found = null;
             try
             {
-                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=D&from=1572651390&to=1575243390&token=bu6lbcn48v6pfj0ol470";
+                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=" + resolutions[r] + "&from=" + from + "&to=" + to + "&token=" + Constants.API_TOKEN;
                 var client = new System.Net.WebClient();
                 var data = client.DownloadString(uri);
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FoundDetailModel));

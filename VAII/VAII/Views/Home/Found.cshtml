@@ -14,7 +14,7 @@
     var stackedLine = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.t.map(a => new Date(a).toString('yyyy-MM-d')),
+            labels: data.t.map(a => new Date(a * 1000).toString('yyyy-MM-dd')),
             datasets: [{
                     data: data.o,
                     label: "open prices",

@@ -1,8 +1,10 @@
 ﻿@model FoundsData
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Found";
 }
-
 
 <input class="form-control margin-10" type="text" id="search" placeholder="Search" aria-label="Search" value="@Model.Search">
 
@@ -10,6 +12,12 @@
     var search = document.getElementById("search");
     search.onchange = (e) => {
         document.location.search = "?page=1&count=@Model.Count&search=" + e.target.value;
+    }
+    function CallPut(s){
+        console.log(s)
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("PUT", "https://localhost:44371/api/UserFounds/" + s);
+        xhttp.send();
     }
 </script>
 <div class="fixed-table-pagination" style="">
@@ -34,42 +42,42 @@
             @if (1 != Model.Page)
             {
 
-                <li class="page-item page-pre"><a class="page-link" aria-label="previous page" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">‹</a></li>
+            <li class="page-item page-pre"><a class="page-link" aria-label="previous page" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">‹</a></li>
             }
 
 
             @if (2 < Model.Page)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page 1" href="?page=1&count=@Model.Count&search=@Model.Search">1</a></li>
+            <li class="page-item"><a class="page-link" aria-label="to page 1" href="?page=1&count=@Model.Count&search=@Model.Search">1</a></li>
             }
             @if (3 < Model.Page)
             {
-                <li class="page-item page-first-separator disabled"><a class="page-link" href="#">...</a></li>
+            <li class="page-item page-first-separator disabled"><a class="page-link" href="#">...</a></li>
             }
 
             @if (1 != Model.Page)
             {
 
-                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page - 1)" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">@(Model.Page - 1)</a></li>
+            <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page - 1)" href="?page=@(Model.Page - 1)&count=@Model.Count&search=@Model.Search">@(Model.Page - 1)</a></li>
             }
             <li class="page-item active"><a class="page-link" aria-label="to page @Model.Page" href="?page=@Model.Page&count=@Model.Count&search=@Model.Search">@Model.Page</a></li>
             @if (Model.MaxPage != Model.Page)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">@(Model.Page + 1)</a></li>
+            <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">@(Model.Page + 1)</a></li>
             }
 
             @if (Model.MaxPage > Model.Page + 1)
             {
-                <li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>
+            <li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>
             }
             @if (Model.MaxPage > Model.Page + 2)
             {
-                <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count&search=@Model.Search">@Model.MaxPage</a></li>
+            <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count&search=@Model.Search">@Model.MaxPage</a></li>
             }
 
             @if (Model.MaxPage != Model.Page)
             {
-                <li class="page-item page-next"><a class="page-link" aria-label="next page" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">›</a></li>
+            <li class="page-item page-next"><a class="page-link" aria-label="next page" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">›</a></li>
             }
 
         </ul>
@@ -79,25 +87,36 @@
 <table id="example" class="table table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
-            <th>Symbol</th>
+            <th>Logo</th>
             <th>Name</th>
+            <th>Description</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (FoundModel f in Model.List)
         {
-            <tr>
-                <td>
-                    <a href="Found?s=@f.symbol" }>
-                        @f.symbol
-                    </a>
-                </td>
+        <tr>
+            <td>
+                <img srs="@f.logo" />
+            </td>
+            <td>
+                <a href="Found?s=@f.symbol" }>
+                    @f.name
+                </a>
+            </td>
 
-                <td>
-                    @f.description
-                </td>
-
-            </tr>
+            <td>
+                @f.description
+            </td>
+            <td>
+                @if(SignInManager.IsSignedIn(User)){
+                <button class="btn btn-success" onclick="CallPut('@f.symbol')">Add</button>
+                }else{
+                <button class="btn btn-success disabled">Add</button>
+                }
+            </td>
+        </tr>
         }
 
     </tbody>

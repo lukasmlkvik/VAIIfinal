@@ -22,7 +22,7 @@ namespace VAII.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<UserFoundModel>().HasKey(uf => new {uf.Email, uf.symbol });
+            modelBuilder.Entity<UserFoundModel>().HasKey(uf => new {uf.Id, uf.symbol });
         }
     }
 }

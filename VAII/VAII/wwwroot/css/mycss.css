@@ -7,3 +7,14 @@
     padding: 0px;
     height: 58px;
 }
+
+@media (min-width: 575px) {
+    .vypln {
+        height: 138px;
+    }
+}
+@media (min-width: 992px) {
+    .vypln {
+        height: 58px;
+    }
+}
