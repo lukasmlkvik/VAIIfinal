@@ -4,7 +4,7 @@
 }
 
 
-<input class="form-control" type="text" id="search" placeholder="Search" aria-label="Search" value="@Model.Search">
+<input class="form-control margin-10" type="text" id="search" placeholder="Search" aria-label="Search" value="@Model.Search">
 
 <script>
     var search = document.getElementById("search");
@@ -12,7 +12,6 @@
         document.location.search = "?page=1&count=@Model.Count&search=" + e.target.value;
     }
 </script>
-
 <div class="fixed-table-pagination" style="">
     <div class="float-left pagination-detail">
         <span class="pagination-info">
