@@ -73,12 +73,15 @@ namespace VAII.Controllers
             {
                 if (f.symbol.Equals(symbol))
                 {
-                    UserFoundModel uf = _db.UsersFounds.Where(u => u.Id.Equals(userId) && u.symbol.Equals(symbol)).Single();
-                    if (uf != null)
-                    {
+                    try {
+                        UserFoundModel uf = _db.UsersFounds.Where(u => u.Id.Equals(userId) && u.symbol.Equals(symbol)).Single();
+
                         _db.UsersFounds.Remove(uf);
                         _db.SaveChanges();
                     }
+                    catch(System.InvalidOperationException) { }                
+                        
+                    
                     break;
                 }
             }

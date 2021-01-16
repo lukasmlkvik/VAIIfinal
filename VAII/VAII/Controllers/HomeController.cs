@@ -138,10 +138,15 @@ namespace VAII.Controllers
                     found = (FoundDetailModel)serializer.ReadObject(m);
                 }
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 found = new FoundDetailModel();
             }
+            try {
+                FoundModel m = _db.Founds.Where(f => f.symbol.Equals(s)).Single();
+                found.logo = m.logo;
+                found.name = m.name;
+            } catch (Exception) { }
 
             return View(found);
         }

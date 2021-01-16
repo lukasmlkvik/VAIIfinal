@@ -1,5 +1,57 @@
-﻿.margin-10{
-    margin:10px;
+﻿input.margin-10 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+td {
+    max-height: 38px;
+
+}
+
+.col-logo{
+    position: relative;
+    padding : 0px !important;
+    width : 62px;
+    height: 62px;
+}
+
+.col-btn {
+    width: 51.6px;
+    height: 51.6px;
+}
+
+.col-logo img {
+    position: absolute;
+    max-width : 62px;
+    max-height: 62px;
+    margin: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.float-right-min780{
+}
+.float-left-min780 {
+}
+@media (min-width: 780px) {
+    .float-right-min780 {
+        float: right !important;
+    }
+    .float-left-min780 {
+        float: left !important;
+    }
+}
+
+.none-991 {
+}
+@media (max-width: 991.98px) {
+    .none-991 {
+        display: none;
+    }
 }
 
 .vypln {
@@ -8,13 +60,8 @@
     height: 58px;
 }
 
-@media (min-width: 575px) {
-    .vypln {
-        height: 138px;
-    }
-}
-@media (min-width: 992px) {
-    .vypln {
-        height: 58px;
-    }
+.remove-animation {
+    opacity: 1;
+    -webkit-transition: 500ms linear;
+    transition: 500ms linear;
 }

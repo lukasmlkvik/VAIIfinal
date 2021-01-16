@@ -21,8 +21,8 @@
     }
 </script>
 <div class="fixed-table-pagination" style="">
-    <div class="float-left pagination-detail">
-        <span class="pagination-info">
+    <div class="float-left-min780 pagination-detail">
+        <span class="pagination-info none-991">
             Showing @((Model.Page - 1) * Model.Count + 1) to @((Model.Page) * Model.Count) of @Model.MaxCount rows
         </span><span class="page-list">
             <span class="btn-group dropdown dropup">
@@ -36,7 +36,7 @@
             </span> rows per page
         </span>
     </div>
-    <div class="float-right pagination">
+    <div class="float-right-min780 pagination">
         <ul class="pagination">
 
             @if (1 != Model.Page)
@@ -66,11 +66,11 @@
             <li class="page-item"><a class="page-link" aria-label="to page @(Model.Page + 1)" href="?page=@(Model.Page + 1)&count=@Model.Count&search=@Model.Search">@(Model.Page + 1)</a></li>
             }
 
-            @if (Model.MaxPage > Model.Page + 1)
+            @if (Model.MaxPage > Model.Page + 2)
             {
             <li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>
             }
-            @if (Model.MaxPage > Model.Page + 2)
+            @if (Model.MaxPage > Model.Page + 1)
             {
             <li class="page-item"><a class="page-link" aria-label="to page @Model.MaxPage" href="?page=@Model.MaxPage&count=@Model.Count&search=@Model.Search">@Model.MaxPage</a></li>
             }
@@ -97,23 +97,27 @@
         @foreach (FoundModel f in Model.List)
         {
         <tr>
-            <td>
-                <img srs="@f.logo" />
+            <td class="col-logo">
+                <img src="@f.logo" />
             </td>
-            <td>
-                <a href="Found?s=@f.symbol" }>
-                    @f.name
-                </a>
+
+            <td class="clickable" onclick="NewPage('https://localhost:44371/Home/Found?s=@f.symbol')">
+                <h4>
+                        @f.name
+                </h4>
             </td>
 
             <td>
                 @f.description
             </td>
-            <td>
-                @if(SignInManager.IsSignedIn(User)){
-                <button class="btn btn-success" onclick="CallPut('@f.symbol')">Add</button>
-                }else{
-                <button class="btn btn-success disabled">Add</button>
+            <td class="col-btn">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <button class="btn btn-success" onclick="CallPut('@f.symbol')">Add</button>
+                }
+                else
+                {
+                    <button class="btn btn-success disabled">Add</button>
                 }
             </td>
         </tr>

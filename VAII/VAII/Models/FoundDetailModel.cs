@@ -14,5 +14,7 @@ namespace VAII.Models
         public List<double> v { get; set; }
         public List<double> t { get; set; }
         public string s { get; set; }
+        public string name { get; set; }
+        public string logo { get; set; }
     }
 }

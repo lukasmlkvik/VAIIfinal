@@ -9,16 +9,31 @@
 @if (SignInManager.IsSignedIn(User))
 {
 
+    <script>
+    function CallDelete(s){
+        var xhttp = new XMLHttpRequest();
+        var element = document.getElementById("card-" + s);
+
+        xhttp.open("DELETE", "https://localhost:44371/api/UserFounds/" + s);
+        xhttp.send();
+        element.style.opacity = 0;
+        setTimeout(() => element.remove(), 500);
+        
+    }
+    </script>
+    <br/>
 
     <div class="card-columns">
         @foreach (FoundModel f in Model)
         {
-        <div class="card">
+
+        <div id="card-@f.symbol" class="card bg-primary remove-animation">
+            <div class="card-header">@f.name</div>
+            <img class="card-img" src=@f.logo alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title">@f.description</h5>
-                <a href="Found?s=@f.symbol" }>
-                    @f.symbol
-                </a>
+                <p class="card-text">@f.description</p>
+                <button class="btn btn-info" onclick="NewPage('https://localhost:44371/Home/Found?s=@f.symbol')">GO TO</button>
+                <button class="btn btn-warning" onclick="CallDelete('@f.symbol')">DELETE</button>
             </div>
         </div>
         }
@@ -27,5 +42,5 @@
 }
 else
 {
-    <h1>You are not Signed in</h1>
+    <h1>You are not Signed</h1>
 }
