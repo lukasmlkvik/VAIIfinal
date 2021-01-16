@@ -9,6 +9,10 @@
 {
     <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage your account</a>
     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="FoundsManage">Founds Manage</a>
+    if (User.Identity.Name.Equals("admin@admin.admin"))
+    {
+        <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Admin Page</a>
+    }
 
 }
 else

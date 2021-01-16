@@ -1,7 +1,23 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@model List<string>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    if (User.Identity.Name.Equals("admin@admin.admin"))
+    {
+        foreach (var s in Model)
+        {
+            <h3>@s</h3>
+        }
+    }
+    else
+    {
+        <h1>Error</h1>
+    }
 }
-
-<h1>Index</h1>
-
+else
+{
+    <h1>Error</h1>
+}
