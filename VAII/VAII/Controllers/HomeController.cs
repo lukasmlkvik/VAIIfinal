@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.Extensions.Logging;
 using VAII.Data;
 using VAII.Models;
@@ -51,13 +53,13 @@ namespace VAII.Controllers
         public IActionResult News()
         {
             NewsListModel newsList = new NewsListModel();
-            ServerInfoModel sm = _db.ServerInfo.Where(s => s.id == 1).Single();
+            ServerInfoModel sm = _db.ServerInfo.Single(s => s.id == 1);
             if (DateTime.Now - sm.date >= TimeSpan.FromHours(24))
             {
 
                 try
                 {
-                    var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from="+ (DateTime.Now - TimeSpan.FromDays(5)).ToString("yyyy-MM-dd")+"&to=" + DateTime.Now.ToString("yyyy-MM-d") + "&token=" + Constants.API_TOKEN;
+                    var uri = "https://finnhub.io/api/v1/company-news?symbol=AAPL&from="+ (DateTime.Now - TimeSpan.FromDays(5)).ToString("yyyy-MM-dd")+"&to=" + DateTime.Now.ToString("yyyy-MM-dd") + "&token=" + Constants.API_TOKEN;
                     var client = new System.Net.WebClient();
                     var data = client.DownloadString(uri);
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<NewsModel>));
@@ -118,9 +120,19 @@ namespace VAII.Controllers
             dataF.MaxPage = list.Count % count == 0 ? list.Count / count : list.Count / count + 1;
             return View(dataF);
         }
-
-        public IActionResult Found(string s, long from = 1609865052, long to = 1610728767, int resolution = 1)
+        private static long offset => new DateTime(1970, 1, 1, 0, 0, 0, 0).Ticks;
+        public IActionResult Found(string s, string from = "2021-01-01T00:00", string to = "2021-01-20T00:00", int resolution = 1)
         {
+            DateTime From = DateTime.Parse("2021-01-01T00:00");
+            DateTime To = DateTime.Parse("2021-01-20T00:00");
+            try {
+                From = DateTime.Parse(from);
+            } catch (Exception) { }
+            try
+            {
+                To = DateTime.Parse(to);
+            }
+            catch (Exception) { }
 
             string[] resolutions = { "1", "5", "15", "30", "60", "D", "W", "M" };
 
@@ -129,7 +141,7 @@ namespace VAII.Controllers
             FoundDetailModel found = null;
             try
             {
-                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=" + resolutions[r] + "&from=" + from + "&to=" + to + "&token=" + Constants.API_TOKEN;
+                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=" + resolutions[r] + "&from=" + ((From.Ticks- offset) /10000000) + "&to=" + ((To.Ticks-offset) / 10000000) + "&token=" + Constants.API_TOKEN;
                 var client = new System.Net.WebClient();
                 var data = client.DownloadString(uri);
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FoundDetailModel));
@@ -143,11 +155,14 @@ namespace VAII.Controllers
                 found = new FoundDetailModel();
             }
             try {
-                FoundModel m = _db.Founds.Where(f => f.symbol.Equals(s)).Single();
+                FoundModel m = _db.Founds.Single(f => f.symbol.Equals(s));
                 found.logo = m.logo;
                 found.name = m.name;
             } catch (Exception) { }
-
+            found.Symbol = s;
+            found.Resolution = resolution;
+            found.From = from;
+            found.To = to;
             return View(found);
         }
 

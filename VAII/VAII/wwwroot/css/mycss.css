@@ -45,6 +45,9 @@ td {
         float: left !important;
     }
 }
+.none {
+    display: none;
+}
 
 .none-991 {
 }
@@ -65,3 +68,73 @@ td {
     -webkit-transition: 500ms linear;
     transition: 500ms linear;
 }
+
+.logo{
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height:46px;
+    max-width: 46px;
+}
+
+
+:root {
+    --color: rgba(255, 255, 255, 0.5);
+    --bg-color: #002b36;
+}
+
+.Button {
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+    color: var(--color);
+    cursor: pointer;
+    padding: 10px;
+    overflow: hidden;
+    -webkit-box-reflect: below 0 linear-gradient(transparent, #0002);
+    user-select: none;
+    background: var(--bg-color);
+    text-decoration: none;
+}
+
+
+    .Button:hover,
+    .Button:active,
+    .Button:checked {
+        text-decoration: none;
+        background: var(--color);
+        color: var(--bg-color);
+        box-shadow: 0 0 50px var(--color);
+        transition-delay: 0.4s;
+        transition-duration: 0.1s;
+    }
+
+    .Button:before,
+    .Button:after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: solid var(--color);
+        transition: 0.5s;
+    }
+
+    .Button:before {
+        top: 0;
+        left: 0;
+        border-bottom: 1px;
+        border-right: 1px;
+    }
+
+    .Button:after {
+        bottom: 0;
+        right: 0;
+        border-top: 1px;
+        border-left: 1px;
+    }
+
+    .Button:hover:before,
+    .Button:hover:after {
+        width: 100%;
+        height: 100%;
+    }

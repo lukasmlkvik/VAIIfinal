@@ -16,5 +16,9 @@ namespace VAII.Models
         public string s { get; set; }
         public string name { get; set; }
         public string logo { get; set; }
+        public string Symbol { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public int Resolution { get; set; }
     }
 }

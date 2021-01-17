@@ -2,6 +2,46 @@
 @{
     ViewData["Title"] = "Found";
 }
+
+
+    
+<div class="position-relative"><img class="logo" src="@Model.logo" /><h2 class="text-center">@Model.name</h2></div>
+
+
+    <form method="get">
+        <input class="none" name="s" value="@Model.Symbol">
+        <div class="form-group">
+            <label for="from">From</label>
+            <input class="form-control" type="datetime-local" name="from" id="from" value="@(Model.From)">
+        </div>
+        <div class="form-group">
+            <label for="to">To</label>
+            <input class="form-control" type="datetime-local" name="to" id="to" value="@(Model.To)">
+        </div>
+        <div class="form-group">
+            <label for="exampleSelect1">Resolution</label>
+            <select class="form-control" name="resolution"  >
+                <option selected="@(Model.Resolution==0)" value="0">1</option>
+                <option selected="@(Model.Resolution==1)" value="1">5</option>
+                <option selected="@(Model.Resolution==2)" value="2">15</option>
+                <option selected="@(Model.Resolution==3)" value="3">30</option>
+                <option selected="@(Model.Resolution==4)" value="4">60</option>
+                <option selected="@(Model.Resolution==5)" value="5">D</option>
+                <option selected="@(Model.Resolution==6)" value="6">W</option>
+                <option selected="@(Model.Resolution==7)" value="7">M</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+<script>
+    let to = document.getElementById("to");
+    let from = document.getElementById("from");
+
+    to.onchange =e => from.max = e.target.value;
+    from.onchange =e => to.min = e.target.value;
+</script>
+
 @if ("ok".Equals(Model.s))
 {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -9,12 +49,15 @@
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');
 
-    var data = JSON.parse('@Json.Serialize(@Model)');
+        var data = JSON.parse('@Json.Serialize(@Model)');
+        function format(d) {
+            return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + " " +  d.getHours() + ":" + d.getMinutes();
+        }
 
     var stackedLine = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.t.map(a => new Date(a * 1000).toString('yyyy-MM-dd')),
+            labels: data.t.map(a => format(new Date(a * 1000))),
             datasets: [{
                     data: data.o,
                     label: "open prices",

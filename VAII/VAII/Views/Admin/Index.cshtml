@@ -5,12 +5,16 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    <h3>Users emails:</h3>
+
     if (User.Identity.Name.Equals("admin@admin.admin"))
     {
-        foreach (var s in Model)
+    <ul class="list-group list-group-flush">
+        @foreach (var s in Model)
         {
-            <h3>@s</h3>
+            <li class="list-group-item">@s</li>
         }
+    </ul>
     }
     else
     {

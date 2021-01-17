@@ -24,16 +24,15 @@ namespace VAII.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<FoundModel> Get()
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            if (!User.Identity.IsAuthenticated) return new List<FoundModel>();
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var list1 = _db.UsersFounds.Where(
+                u => u.Id.Equals(userId));
+            IEnumerable<FoundModel> list = list1.Join(_db.Founds,
+                uf => uf.symbol, f => f.symbol, (uf, f) => f);
+            return list;
         }
 
 
