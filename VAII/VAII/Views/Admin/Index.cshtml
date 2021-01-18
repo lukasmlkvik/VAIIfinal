@@ -1,27 +1,28 @@
 ﻿@model List<string>
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
+@if (User.IsInRole("Admin")) //pre istotu
 {
-    <h3>Users emails:</h3>
+    <script>
+        function CallDeleteUser(s) {
+            if (confirm("Really want delete " + s + "?")) {
 
-    if (User.Identity.Name.Equals("admin@admin.admin"))
-    {
+                var xhttp = new XMLHttpRequest();
+                var element = document.getElementById("li-" + s);
+
+                xhttp.open("DELETE", "https://localhost:44371/api/AdminApi/" + s);
+                xhttp.send();
+                element.style.opacity = 0;
+                setTimeout(() => element.remove(), 500);
+            }
+
+        }
+    </script>
+    <h2>Other users:</h2>
     <ul class="list-group list-group-flush">
         @foreach (var s in Model)
         {
-            <li class="list-group-item">@s</li>
+            <li id="li-@s" class="list-group-item remove-animation">@s <button class="btn btn-warning float-right" onclick="CallDeleteUser('@s')">DELETE</button></li>
         }
     </ul>
-    }
-    else
-    {
-        <h1>Error</h1>
-    }
-}
-else
-{
-    <h1>Error</h1>
 }

@@ -96,8 +96,6 @@ td {
     background: var(--bg-color);
     text-decoration: none;
 }
-
-
     .Button:hover,
     .Button:active,
     .Button:checked {

@@ -8,32 +8,33 @@
 <div class="position-relative"><img class="logo" src="@Model.logo" /><h2 class="text-center">@Model.name</h2></div>
 
 
-    <form method="get">
-        <input class="none" name="s" value="@Model.Symbol">
-        <div class="form-group">
+<form method="get">
+    <input class="none" name="s" value="@Model.Symbol">
+    <div class="form-row">
+        <div class="form-group col-md-5">
             <label for="from">From</label>
             <input class="form-control" type="datetime-local" name="from" id="from" value="@(Model.From)">
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-5">
             <label for="to">To</label>
             <input class="form-control" type="datetime-local" name="to" id="to" value="@(Model.To)">
         </div>
-        <div class="form-group">
-            <label for="exampleSelect1">Resolution</label>
-            <select class="form-control" name="resolution"  >
-                <option selected="@(Model.Resolution==0)" value="0">1</option>
-                <option selected="@(Model.Resolution==1)" value="1">5</option>
-                <option selected="@(Model.Resolution==2)" value="2">15</option>
-                <option selected="@(Model.Resolution==3)" value="3">30</option>
-                <option selected="@(Model.Resolution==4)" value="4">60</option>
-                <option selected="@(Model.Resolution==5)" value="5">D</option>
-                <option selected="@(Model.Resolution==6)" value="6">W</option>
-                <option selected="@(Model.Resolution==7)" value="7">M</option>
+        <div class="form-group col-md-2">
+            <label>Resolution</label>
+            <select class="form-control" name="resolution">
+                <option selected="@(Model.Resolution==0)" value="0">1 min</option>
+                <option selected="@(Model.Resolution==1)" value="1">5 min</option>
+                <option selected="@(Model.Resolution==2)" value="2">15 min</option>
+                <option selected="@(Model.Resolution==3)" value="3">30 min</option>
+                <option selected="@(Model.Resolution==4)" value="4">60 min</option>
+                <option selected="@(Model.Resolution==5)" value="5">Day </option>
+                <option selected="@(Model.Resolution==6)" value="6">Week</option>
+                <option selected="@(Model.Resolution==7)" value="7">Month</option>
             </select>
         </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        <button type="submit" class="btn btn-primary col-lg-3">Submit</button>
+    </div>
+</form>
 <script>
     let to = document.getElementById("to");
     let from = document.getElementById("from");

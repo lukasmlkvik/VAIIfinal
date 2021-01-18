@@ -10,7 +10,7 @@
     <br /><br />
     <a class="text-decoration-none" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><h4 class="Button">Manage your account</h4></a>
     <br /><br /><a class="text-decoration-none" asp-area="" asp-controller="Home" asp-action="FoundsManage"><h4 class="Button">Founds Manage</h4></a>
-    if (User.Identity.Name.Equals("admin@admin.admin"))
+    if (User.IsInRole("Admin"))
     {
 <br /><br />  <a class="text-decoration-none" asp-area="" asp-controller="Admin" asp-action="Index"><h4 class="Button">Admin Page</h4></a>
     }
