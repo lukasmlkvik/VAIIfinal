@@ -1,5 +1,8 @@
 ﻿@model List<string>
-@using Microsoft.AspNetCore.Identity
+
+@{
+    ViewData["Title"] = "Admin Page";
+}
 
 @if (User.IsInRole("Admin")) //pre istotu
 {
