@@ -46,7 +46,11 @@
 @if ("ok".Equals(Model.s))
 {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <canvas id="myChart" width="200" height="200"></canvas>
+
+    <div class="max-height">
+        <canvas id="myChart"></canvas>
+    </div>
+
     <script>
     var ctx = document.getElementById('myChart').getContext('2d');
 
@@ -90,6 +94,9 @@
                     fill: false
                 },
             ]
+        },
+        options: {
+            maintainAspectRatio: false
         }
     });
 
