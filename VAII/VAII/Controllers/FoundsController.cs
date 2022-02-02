@@ -43,10 +43,10 @@ namespace VAII.Controllers
 
 
         private static long offset => new DateTime(1970, 1, 1, 0, 0, 0, 0).Ticks;
-        public IActionResult Found(string s, string from = "2021-01-01T00:00", string to = "2021-01-20T00:00", int resolution = 1)
+        public IActionResult Found(string s, string from = "2022-01-01T00:00", string to = "2022-01-20T00:00", int resolution = 1)
         {
-            DateTime From = DateTime.Parse("2021-01-01T00:00");
-            DateTime To = DateTime.Parse("2021-01-20T00:00");
+            DateTime From = DateTime.Parse("2022-01-01T00:00");
+            DateTime To = DateTime.Parse("2022-01-20T00:00");
             try
             {
                 From = DateTime.Parse(from);
@@ -65,7 +65,7 @@ namespace VAII.Controllers
             FoundDetailModel found = null;
             try
             {
-                var uri = "https://finnhub.io/api/v1/forex/candle?symbol=" + s + "&resolution=" + resolutions[r] + "&from=" + ((From.Ticks - offset) / 10000000) + "&to=" + ((To.Ticks - offset) / 10000000) + "&token=" + Constants.API_TOKEN;
+                var uri = "https://finnhub.io/api/v1/stock/candle?symbol=" + s + "&resolution=" + resolutions[r] + "&from=" + ((From.Ticks - offset) / 10000000) + "&to=" + ((To.Ticks - offset) / 10000000) + "&token=" + Constants.API_TOKEN;
                 var client = new System.Net.WebClient();
                 var data = client.DownloadString(uri);
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FoundDetailModel));
